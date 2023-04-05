@@ -7,7 +7,7 @@
 get_main_subjects()
 }
 \value{
-a list with subjects names, ids and other subcategories
+a list with subjects names, ids (tibble) and other subcategories
 }
 \description{
 Get all main subjects of BDL API
