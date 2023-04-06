@@ -1,15 +1,17 @@
-get_subject_by_id <- function(id){
+get_subject_by_id <- function(id, rate = 60/60){
   contents <- define_bdl_request() %>%
     httr2::req_url_path_append("subjects") %>%
     httr2::req_url_query(`parent-id` = id) %>%
+    httr2::req_throttle(rate) %>%
     httr2::req_perform() %>%
     httr2::resp_body_json()
   results <- contents[["results"]]
   links <- contents[["links"]]
   while(links$self != links$last){
     contents <- httr2::request(links$`next`) %>% 
-      add_bdl_token()
-    httr2::req_perform %>%
+      add_bdl_token() %>%
+      httr2::req_throttle(rate) %>%
+      httr2::req_perform() %>%
       httr2::resp_body_json()
     results <- c(results, contents[["results"]])
     links <- contents[["links"]]
@@ -31,16 +33,14 @@ get_subject_by_id <- function(id){
 #' @examples
 #' get_main_subjects("K8")
 #' @export
-get_subject_subcategories <- function(main_subject_id, 
-                                      sleep_time = 1){
+get_subject_subcategories <- function(main_subject_id){
   output <- list()
   i <- 1
   x <- get_subject_by_id(id = main_subject_id)
   output[[i]] <- x
   condition <- sum(purrr::map_lgl(x$resp, "hasVariables")) == 0
   while(condition){
-    f <- function(id){Sys.sleep(sleep_time); get_subject_by_id(id)}
-    x <- purrr::map(x$df$id, ~f(.))
+    x <- purrr::map(x$df$id, ~get_subject_by_id(.))
     i <- i+1
     output[[i]] <- list(df = purrr::map_dfr(x, "df"),
                         resp = purrr::map(x, "resp"))
