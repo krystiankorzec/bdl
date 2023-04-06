@@ -1,16 +1,16 @@
 get_subject_by_id <- function(id){
   contents <- define_bdl_request() %>%
-    req_url_path_append("subjects") %>%
-    req_url_query(`parent-id` = id) %>%
-    req_perform() %>%
-    resp_body_json()
+    httr2::req_url_path_append("subjects") %>%
+    httr2::req_url_query(`parent-id` = id) %>%
+    httr2::req_perform() %>%
+    httr2::resp_body_json()
   results <- contents[["results"]]
   links <- contents[["links"]]
   while(links$self != links$last){
-    contents <- request(links$`next`) %>% 
+    contents <- httr2::request(links$`next`) %>% 
       add_bdl_token()
-      req_perform %>%
-      resp_body_json()
+    httr2::req_perform %>%
+      httr2::resp_body_json()
     results <- c(results, contents[["results"]])
     links <- contents[["links"]]
   }
@@ -37,18 +37,18 @@ get_subject_subcategories <- function(main_subject_id,
   i <- 1
   x <- get_subject_by_id(id = main_subject_id)
   output[[i]] <- x
-  condition <- sum(map_lgl(x$resp, "hasVariables")) == 0
+  condition <- sum(purrr::map_lgl(x$resp, "hasVariables")) == 0
   while(condition){
     f <- function(id){Sys.sleep(sleep_time); get_subject_by_id(id)}
-    x <- map(x$df$id, ~f(.))
+    x <- purrr::map(x$df$id, ~f(.))
     i <- i+1
-    output[[i]] <- list(df = map_dfr(x, "df"),
-                        resp = map(x, "resp"))
-    has_variables <- map(x, ~map_lgl(.$resp, "hasVariables"))
+    output[[i]] <- list(df = purrr::map_dfr(x, "df"),
+                        resp = purrr::map(x, "resp"))
+    has_variables <- purrr::map(x, ~map_lgl(.$resp, "hasVariables"))
     condition <- sum(unlist(has_variables)) == 0 
   }
   output
-  dfs_list <- map(output, "df")
+  dfs_list <- purrr::map(output, "df")
   my_left_join <- purrr::partial(dplyr::left_join, by = c("id" = "parent_id"))
   Reduce(my_left_join, dfs_list)
 }
