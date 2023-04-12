@@ -28,7 +28,6 @@ get_subject_by_id <- function(id, rate = 60/60){
 #' Get all subcategories of main subject
 #'
 #' @param main_subject_id main subject id e.g K8
-#' @param sleep_time time in seconds between consecutive queries
 #' @return a tibble with all subcategories and variables
 #' @examples
 #' get_main_subjects("K8")

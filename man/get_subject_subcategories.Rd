@@ -4,12 +4,10 @@
 \alias{get_subject_subcategories}
 \title{Get all subcategories of main subject}
 \usage{
-get_subject_subcategories(main_subject_id, sleep_time = 1)
+get_subject_subcategories(main_subject_id)
 }
 \arguments{
 \item{main_subject_id}{main subject id e.g K8}
-
-\item{sleep_time}{time in seconds between consecutive queries}
 }
 \value{
 a tibble with all subcategories and variables

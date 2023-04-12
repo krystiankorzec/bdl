@@ -16,3 +16,17 @@ add_bdl_token <- function(req, token = get_token()){
   req %>%
     {if(!is.null(token)) httr2::req_headers(., `X-ClientId` = token) else . }
 }
+loop_over_links <- function(contents, rate){
+  results <- contents[["results"]]
+  links <- contents[["links"]]
+  while(links$self != links$last){
+    contents <- httr2::request(links$`next`) %>% 
+      add_bdl_token() %>%
+      httr2::req_throttle(rate) %>%
+      httr2::req_perform() %>%
+      httr2::resp_body_json()
+    results <- c(results, contents[["results"]])
+    links <- contents[["links"]]
+  }
+  results
+}
