@@ -43,7 +43,7 @@ get_subject_subcategories <- function(main_subject_id){
     i <- i+1
     output[[i]] <- list(df = purrr::map_dfr(x, "df"),
                         resp = purrr::map(x, "resp"))
-    has_variables <- purrr::map(x, ~map_lgl(.$resp, "hasVariables"))
+    has_variables <- purrr::map(x, ~purrr::map_lgl(.$resp, "hasVariables"))
     condition <- sum(unlist(has_variables)) == 0 
   }
   output

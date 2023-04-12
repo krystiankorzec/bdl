@@ -15,3 +15,6 @@ nothing
 \description{
 Set environment variable with BDL API token
 }
+\examples{
+set_api_token(token = "123456qwerty")
+}

@@ -3,7 +3,7 @@
 #' @param token a string with BDL API personal token
 #' @return nothing
 #' @examples
-#' set_api_token(token = "123456qwerty)
+#' set_api_token(token = "123456qwerty")
 #' @export
 set_api_token <- function(token = NULL) {
   if (is.null(token)) {
