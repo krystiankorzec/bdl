@@ -19,6 +19,10 @@ add_bdl_token <- function(req, token = get_token()){
 loop_over_links <- function(contents, rate){
   results <- contents[["results"]]
   links <- contents[["links"]]
+  if (is.null(links)){
+    warning("Empty links in contents variable!")
+    return(NULL)
+  }
   while(links$self != links$last){
     contents <- httr2::request(links$`next`) %>% 
       add_bdl_token() %>%
