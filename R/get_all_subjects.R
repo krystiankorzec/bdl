@@ -47,7 +47,7 @@ get_all_subjects <- function(rate = 60/60, verbose = TRUE){
   for(i in 1:2){
     if (verbose) {
       n_vars <- length(main_subjects$children[[i]])
-      print(paste(y$df$name[i], "#categories:", n_vars))
+      print(paste(main_subjects$name[i], "#categories:", n_vars))
     }
     output[[i]] <- purrr::map(main_subjects$children[[i]],
                               ~get_subject_by_id(id = .))
