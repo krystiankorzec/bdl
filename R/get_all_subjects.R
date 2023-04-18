@@ -43,7 +43,7 @@ get_all_subjects <- function(rate = 60/60, verbose = TRUE){
     )
   # Iterate over main subjects to list all categories  
   output <- list()
-  for(i in 1:length(y$df$children)){
+  for(i in 1:length(main_subjects$children)){
     if (verbose) {
       n_vars <- length(main_subjects$children[[i]])
       print(paste(main_subjects$name[i], "#categories:", n_vars))
